@@ -1,6 +1,6 @@
 package com.tutego.date4u.core;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
