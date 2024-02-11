@@ -1,6 +1,9 @@
 package com.tutego.date4u.interfaces.shell;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
@@ -28,5 +31,11 @@ public class PhotoCommands {
                 return e.getMessage();
             }
         }).orElse("Photo not found");
+    }
+
+    @ShellMethod("Upload Photo")
+    String uploadPhoto(String fileName) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(fileName));
+        return "Uploaded photo with name " + photoService.upload(bytes);
     }
 }

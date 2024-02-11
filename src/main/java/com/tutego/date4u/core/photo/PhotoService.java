@@ -2,6 +2,7 @@ package com.tutego.date4u.core.photo;
 
 import java.io.UncheckedIOException;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,15 @@ public class PhotoService {
         } catch (UncheckedIOException e) {
             return Optional.empty();
         }
+    }
+
+    public String upload(byte[] imageBytes) {
+        String imageName = UUID.randomUUID().toString();
+        fs.store(imageName + ".jpg", imageBytes);
+
+        byte[] thumbnailBytes = thumbnail.thumbnail(imageBytes);
+
+        fs.store(imageName + "-thumb.jpg", thumbnailBytes);
+        return imageName;
     }
 }
