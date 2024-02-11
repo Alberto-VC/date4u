@@ -10,9 +10,11 @@ import com.tutego.date4u.core.FileSystem;
 @Service
 public class PhotoService {
     private final FileSystem fs;
+    private final AwtBicubicThumbnail thumbnail;
 
-    public PhotoService(FileSystem fs) {
+    public PhotoService(FileSystem fs, AwtBicubicThumbnail thumbnail) {
         this.fs = fs;
+        this.thumbnail = thumbnail;
     }
 
     public Optional<byte[]> download(String name) {
