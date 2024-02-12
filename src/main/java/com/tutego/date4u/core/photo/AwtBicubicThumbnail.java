@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 
 @Service
-public class AwtBicubicThumbnail {
+public class AwtBicubicThumbnail implements Thumbnail {
     private static BufferedImage create(BufferedImage source, int width, int height) {
 
         double thumbRatio = (double) width / height;
@@ -34,6 +34,7 @@ public class AwtBicubicThumbnail {
         return thumb;
     }
 
+    @Override
     public byte[] thumbnail(byte[] imageBytes) {
         try (InputStream is = new ByteArrayInputStream(imageBytes);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
