@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("fastThumbnailRenderer")
 public class AwtNearestNeighborThumbnail implements Thumbnail {
     private static BufferedImage create(BufferedImage source,
             int width, int height) {

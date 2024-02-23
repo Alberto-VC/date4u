@@ -4,6 +4,7 @@ import java.io.UncheckedIOException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.tutego.date4u.core.FileSystem;
@@ -11,6 +12,8 @@ import com.tutego.date4u.core.FileSystem;
 @Service
 public class PhotoService {
     private final FileSystem fs;
+
+    @Qualifier("qualityThumbnailRenderer")
     private final Thumbnail thumbnail;
 
     public PhotoService(FileSystem fs, Thumbnail thumbnail) {
