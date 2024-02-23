@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import org.springframework.stereotype.Service;
 
 @Service("qualityThumbnailRenderer")
+@ThumbnailRendering(ThumbnailRendering.RenderQuality.QUALITY)
 public class AwtBicubicThumbnail implements Thumbnail {
     private static BufferedImage create(BufferedImage source,
             int width, int height) {
