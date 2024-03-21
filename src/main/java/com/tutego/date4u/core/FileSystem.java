@@ -2,6 +2,8 @@ package com.tutego.date4u.core;
 
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,8 +15,8 @@ public class FileSystem {
     public FileSystem() {
         try {
             if (!Files.isDirectory(root)) Files.createDirectories(root);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -24,17 +26,24 @@ public class FileSystem {
 
     public byte[] load(String filename) {
         try {
+            Path path = resolve(filename);
             return Files.readAllBytes(root.resolve(filename));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 
     public void store(String filename, byte[] data) {
         try {
             Files.write(root.resolve(filename), data);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
+    }
+
+    public Path resolve(String filename) {
+        Path path = root.resolve(filename).toAbsolutePath().normalize();
+        if(!path.startsWith(root)) throw new SecurityException("Access to " + path + " denied");
+        return path;
     }
 }
