@@ -10,14 +10,19 @@ import java.nio.file.Paths;
 
 @Service
 public class FileSystem {
-    private final Path root = Paths.get(System.getProperty("user.home")).resolve("fs");
+    private final Path root;
 
-    public FileSystem() {
+    public FileSystem(Path root) {
+        this.root = root;
         try {
             if (!Files.isDirectory(root)) Files.createDirectories(root);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    public FileSystem() {
+        this(Paths.get(System.getProperty("user.home")).resolve("fs").toAbsolutePath().normalize());
     }
 
     public long getFreeDiskSpace() {
