@@ -19,8 +19,8 @@ public class PhotoService {
     @ThumbnailRendering(ThumbnailRendering.RenderQuality.FAST)
     private final Thumbnail thumbnail;
 
-    @Autowired
-    private ApplicationEventPublisher publisher;
+    //@Autowired
+    //private ApplicationEventPublisher publisher;
 
     public PhotoService(FileSystem fs, @Qualifier("fastThumbnailRenderer") Thumbnail thumbnail) {
         this.fs = fs;
@@ -44,7 +44,7 @@ public class PhotoService {
         fs.store(imageName + "-thumb.jpg", thumbnailBytes);
         NewPhotoEvent newPhotoEvent = new NewPhotoEvent(imageName, OffsetDateTime.now());
 
-        publisher.publishEvent(newPhotoEvent);
+        //publisher.publishEvent(newPhotoEvent);
         return imageName;
     }
 }
