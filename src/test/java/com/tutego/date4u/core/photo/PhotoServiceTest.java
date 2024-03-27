@@ -4,12 +4,13 @@ import com.tutego.date4u.core.FileSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.Base64;
 
@@ -20,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//@SpringBootTest
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class PhotoServiceTest {
@@ -30,11 +31,13 @@ public class PhotoServiceTest {
                     + "//////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAA"
                     + "AAAAP/aAAgBAQABPxA=");                      // https://git.io/J9GXr
 
-    @Mock
+    @MockBean
     FileSystem fileSystem;
-    @Spy
+
+    @SpyBean
     AwtBicubicThumbnail thumbnail;
-    @InjectMocks
+
+    @Autowired
     PhotoService photoService;
 
     @BeforeEach
