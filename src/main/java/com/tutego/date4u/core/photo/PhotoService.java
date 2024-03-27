@@ -28,7 +28,10 @@ public class PhotoService {
         this.thumbnail = thumbnail;
     }
 
-    @Cacheable("date4u.filesystem.file")
+    @Cacheable(cacheNames = "date4u.filesystem.file",
+            key = "#name",
+            condition = "#name.length() > 3",
+            unless = "#result == null")
     public Optional<byte[]> download(String name) {
         try {
             return Optional.of(fs.load(name + ".jpg"));
