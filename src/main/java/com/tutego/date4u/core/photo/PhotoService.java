@@ -1,11 +1,13 @@
 package com.tutego.date4u.core.photo;
 
 import com.tutego.date4u.core.FileSystem;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.UncheckedIOException;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Service
+@Validated
 public class PhotoService {
     Logger log = LoggerFactory.getLogger(PhotoService.class);
 
@@ -37,6 +40,14 @@ public class PhotoService {
         } catch (UncheckedIOException e) {
             return Optional.empty();
         }
+    }
+
+    @Cacheable(cacheNames = "date4u.filesystem.file",
+            key = "#photo.name",
+            condition = "#photo.name.length() > 3",
+            unless = "#result == null")
+    public Optional<byte[]> download(@Valid Photo photo) {
+        return download(photo.name);
     }
 
     public String upload(byte[] imageBytes) {
