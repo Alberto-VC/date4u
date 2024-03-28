@@ -1,27 +1,26 @@
 package com.tutego.date4u.core.photo;
 
 import com.tutego.date4u.core.FileSystem;
-import com.tutego.date4u.core.event.NewPhotoEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.io.UncheckedIOException;
-import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Service
 public class PhotoService {
+    Logger log = LoggerFactory.getLogger(PhotoService.class);
+
     private final FileSystem fs;
 
     @ThumbnailRendering(ThumbnailRendering.RenderQuality.FAST)
     private final Thumbnail thumbnail;
-
-    //@Autowired
-    //private ApplicationEventPublisher publisher;
 
     public PhotoService(FileSystem fs, @Qualifier("fastThumbnailRenderer") Thumbnail thumbnail) {
         this.fs = fs;
@@ -41,15 +40,19 @@ public class PhotoService {
     }
 
     public String upload(byte[] imageBytes) {
+        Future<byte[]> thumbnailBytes = thumbnail.thumbnail(imageBytes);
+
         String imageName = UUID.randomUUID().toString();
+
         fs.store(imageName + ".jpg", imageBytes);
 
-        byte[] thumbnailBytes = thumbnail.thumbnail(imageBytes);
+        try{
+            log.info("Thumbnail bytes: {}", thumbnailBytes.get());
+            fs.store(imageName + "-thumb.jpg", thumbnailBytes.get());
+        }catch (InterruptedException | ExecutionException e){
+            throw new IllegalStateException(e);
+        }
 
-        fs.store(imageName + "-thumb.jpg", thumbnailBytes);
-        NewPhotoEvent newPhotoEvent = new NewPhotoEvent(imageName, OffsetDateTime.now());
-
-        //publisher.publishEvent(newPhotoEvent);
         return imageName;
     }
 }

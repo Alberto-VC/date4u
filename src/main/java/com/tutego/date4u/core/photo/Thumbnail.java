@@ -1,5 +1,10 @@
 package com.tutego.date4u.core.photo;
 
+import org.springframework.scheduling.annotation.Async;
+
+import java.util.concurrent.Future;
+
 public interface Thumbnail {
-    byte[] thumbnail(byte[] imagebytes);
+    @Async
+    Future<byte[]> thumbnail(byte[] imagebytes);
 }

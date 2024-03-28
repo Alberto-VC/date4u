@@ -8,6 +8,8 @@ import javax.imageio.ImageIO;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.springframework.stereotype.Service;
 
@@ -37,14 +39,14 @@ public class AwtBicubicThumbnail implements Thumbnail {
     }
 
     @Override
-    public byte[] thumbnail(byte[] imageBytes) {
+    public Future<byte[]> thumbnail(byte[] imageBytes) {
         try (InputStream is = new ByteArrayInputStream(imageBytes);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
             BufferedImage thumbnail = create(ImageIO.read(is), 200, 200);
             ImageIO.write(thumbnail, "jpg", baos);
 
-            return baos.toByteArray();
+            return CompletableFuture.completedFuture(baos.toByteArray());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
