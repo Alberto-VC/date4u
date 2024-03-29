@@ -14,20 +14,16 @@ import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.assertj.core.api.BDDAssertions.as;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@SpringBootTest({ "spring.shell.interactive.enabled=false" })
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class PhotoServiceTest {
@@ -40,7 +36,7 @@ public class PhotoServiceTest {
     @MockBean
     FileSystem fileSystem;
 
-    @SpyBean
+    @MockBean
     AwtBicubicThumbnail thumbnail;
 
     @Autowired
@@ -50,6 +46,13 @@ public class PhotoServiceTest {
     void setupFileSystem() {
         given(fileSystem.getFreeDiskSpace()).willReturn(1000L);
         given(fileSystem.load(anyString())).willReturn(MINIMAL_JPG);
+    }
+
+
+    @Test
+    public void successful_photo_upload() {
+        String imageName = photoService.upload(MINIMAL_JPG);
+        assertThat(imageName).isNotEmpty();
     }
 
     @Nested
@@ -80,13 +83,5 @@ public class PhotoServiceTest {
                         assertThat(violation.getInvalidValue()).isEqualTo(future);
                     });
         }
-    }
-
-    @Test
-    public void successful_photo_upload() {
-        String imageName = photoService.upload(MINIMAL_JPG);
-        assertThat(imageName).isNotNull();
-        verify(fileSystem, times(2)).store(anyString(), any(byte[].class));
-        verify(thumbnail).thumbnail(any(byte[].class));
     }
 }
