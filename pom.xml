@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <spring.shell.version>3.2.1</spring.shell.version>
     </properties>
-    <dependencies>
+   <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
