@@ -1,17 +1,24 @@
 package com.tutego.date4u.core.photo;
 
-import jakarta.validation.constraints.Min;
+import com.tutego.date4u.core.profile.Profile;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDateTime;
 
+@Entity
 public class Photo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
-    @Min(1)
-    public long profile;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_fk")
+    public Profile profile;
+
     @NotNull
     @Pattern(regexp = "[\\w_-]{1,200}")
     public String name;
@@ -22,7 +29,7 @@ public class Photo {
 
     public Photo(){}
 
-    public Photo(Long id, Long profile, String name, boolean isProfilePhoto, LocalDateTime created){
+    public Photo(Long id, Profile profile, String name, boolean isProfilePhoto, LocalDateTime created){
         this.id = id;
         this.profile = profile;
         this.name = name;
@@ -49,11 +56,11 @@ public class Photo {
         this.id = id;
     }
 
-    public long getProfile() {
+    public Profile getProfile() {
         return profile;
     }
 
-    public void setProfile(long profile) {
+    public void setProfile(Profile profile) {
         this.profile = profile;
     }
 
